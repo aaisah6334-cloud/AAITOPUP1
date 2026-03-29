@@ -1,0 +1,139 @@
+/* 1. THEME VARIABLES - The "Pi" Palette */
+:root {
+    --pi-purple: #673ab7;
+    --pi-purple-dark: #4b2c8a;
+    --pi-gold: #ffa500;
+    --pi-gold-glow: rgba(255, 165, 0, 0.4);
+    --bg-dark: #0f0c29;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-main: #ffffff;
+    --text-dim: #b0b0b0;
+    --shadow-hd: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* 2. CORE RESET & BACKGROUND */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* Mobile Optimization */
+}
+
+body {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* 3. GLASSMORPHISM CARDS */
+.pi-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: var(--shadow-hd);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.pi-card:active {
+    transform: scale(0.98);
+    border-color: var(--pi-gold);
+}
+
+/* 4. TYPOGRAPHY & GRADIENTS */
+h1, h2, .pi-logo {
+    background: linear-gradient(to right, #ffffff, var(--pi-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+/* 5. THE "GOLDEN" ACTION BUTTON */
+.pi-btn {
+    background: linear-gradient(45deg, var(--pi-gold), #ff8c00);
+    color: #000;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px var(--pi-gold-glow);
+    transition: 0.3s all ease;
+}
+
+.pi-btn:hover {
+    box-shadow: 0 6px 25px var(--pi-gold);
+    transform: translateY(-2px);
+}
+
+/* 6. INPUT FIELDS (For Wallets/Forms) */
+.pi-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 15px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.pi-input:focus {
+    border-color: var(--pi-gold);
+    box-shadow: 0 0 10px var(--pi-gold-glow);
+}
+
+/* 7. BOTTOM NAVIGATION (App Style) */
+.pi-nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: rgba(15, 12, 41, 0.85);
+    backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid var(--glass-border);
+    padding-bottom: env(safe-area-inset-bottom); /* iOS Notch support */
+}
+
+.nav-item {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-item.active {
+    color: var(--pi-gold);
+}
+
+/* 8. ANIMATIONS */
+@keyframes pulse-gold {
+    0% { box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 165, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 165, 0, 0); }
+}
+
+.pi-mining-active {
+    animation: pulse-gold 2s infinite;
+}
