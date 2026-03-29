@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aaitopup marketplace</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pi-gold: #ffa500;
+            --pi-purple: #673ab7;
+            --dark-bg: #0f0c29;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--pi-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--pi-gold);
+            color: black;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, var(--pi-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Product Grid */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            background: #444;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .price {
+            color: var(--pi-gold);
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .btn-buy {
+            background: var(--pi-gold);
+            color: black;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .btn-buy:hover {
+            box-shadow: 0 0 15px var(--pi-gold);
+        }
+
+        /* Cart Sidebar */
+        #cart-sidebar {
+            position: fixed;
+            right: -100%;
+            top: 0;
+            width: 350px;
+            height: 100%;
+            background: #1a1a2e;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            transition: 0.4s;
+            padding: 2rem;
+            z-index: 2000;
+        }
+
+        #cart-sidebar.active {
+            right: 0;
+        }
+
+        .close-cart {
+            cursor: pointer;
+            float: right;
+            font-size: 1.5rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.8rem; }
+            #cart-sidebar { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fab fa-pi"></i> PiNexus
+        </div>
+        <div class="cart-icon" onclick="toggleCart()">
+            <i class="fas fa-shopping-basket"></i>
+            <span id="cart-count">0</span>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Global Pi Marketplace</h1>
+        <p>Secure peer-to-peer trading within the Pi Ecosystem</p>
+    </section>
+
+    <main class="container" id="product-list">
+        </main>
+
+    <div id="cart-sidebar">
+        <span class="close-cart" onclick="toggleCart()">&times;</span>
+        <h2>Your Cart</h2>
+        <div id="cart-items-container"></div>
+        <div style="margin-top: 2rem;">
+            <h3>Total: <span id="total-price">0</span> π</h3>
+            <button class="btn-buy" style="margin-top:1rem;" onclick="checkout()">Checkout with Pi</button>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: "Neural Pro Headphones", price: 15.5, icon: "🎧" },
+            { id: 2, name: "Smart Watch Series π", price: 45.0, icon: "⌚" },
+            { id: 3, name: "Wireless Charger", price: 5.2, icon: "🔋" },
+            { id: 4, name: "Digital Artist Tablet", price: 120.0, icon: "✍️" },
+            { id: 5, name: "VR Horizon Headset", price: 85.5, icon: "👓" },
+            { id: 6, name: "Portable SSD 1TB", price: 30.0, icon: "💾" }
+        ];
+
+        let cart = [];
+
+        function renderProducts() {
+            const list = document.getElementById('product-list');
+            list.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <div class="product-img">${p.icon}</div>
+                    <h3>${p.name}</h3>
+                    <p class="price">${p.price} π</p>
+                    <button class="btn-buy" onclick="addToCart(${p.id})">Add to Cart</button>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const item = products.find(p => p.id === id);
+            cart.push(item);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const container = document.getElementById('cart-items-container');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            container.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <span>${item.name}</span>
+                    <span>${item.price} π</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('total-price').innerText = total.toFixed(2);
+        }
+
+        function toggleCart() {
+            document.getElementById('cart-sidebar').classList.toggle('active');
+        }
+
+        function checkout() {
+            if(cart.length === 0) return alert("Cart is empty!");
+            
+            alert(`Redirecting to Pi Wallet...\nTotal Payment: ${document.getElementById('total-price').innerText} π`);
+            // Here you would integrate the Pi.createPayment() SDK method
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>
